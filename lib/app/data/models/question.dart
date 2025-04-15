@@ -28,4 +28,11 @@ class Question {
       reponses: reponses,
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        'idQuestion': idQuestion,
+        'question': question,
+        'idEvaluation': idEvaluation,
+        'reponses': reponses.map((x) => x.toJson()).toList(),
+      };
 }

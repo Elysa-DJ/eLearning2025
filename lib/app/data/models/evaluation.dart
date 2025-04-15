@@ -20,9 +20,9 @@ class Evaluation {
   });
 
   factory Evaluation.fromJson(Map<String, dynamic> json) {
-    List<Question> questions = [];
+    List<Question> questionsList = [];
     if (json['questions'] != null) {
-      questions = List<Question>.from(
+      questionsList = List<Question>.from(
         json['questions'].map((x) => Question.fromJson(x)),
       );
     }
@@ -31,12 +31,12 @@ class Evaluation {
       idEvaluation: json['idEvaluation'],
       note: json['note'].toDouble(),
       dateEvaluation: DateTime.parse(json['dateEvaluation']),
-      questions: questions,
-      cours: json['cours'] != null 
-          ? Cours.fromJson(json['cours'], json['typeCours']) 
+      questions: questionsList,
+      cours: json['cours'] != null
+          ? Cours.fromJson(json['cours'])
           : null,
-      administrateur: json['administrateur'] != null 
-          ? Administrateur.fromJson(json['administrateur']) 
+      administrateur: json['administrateur'] != null
+          ? Administrateur.fromJson(json['administrateur'])
           : null,
     );
   }

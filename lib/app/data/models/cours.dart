@@ -12,16 +12,47 @@ abstract class Cours {
     required this.description,
   });
 
-  Map<String, dynamic> toJson();
-  
-  factory Cours.fromJson(Map<String, dynamic> json, String type) {
+  // Factory constructeur pour créer le bon type de cours
+  factory Cours.fromJson(Map<String, dynamic> json) {
+    // Vérifier le type de cours dans le JSON
+    final String type = json['type'] ?? 'default';
+    
     switch (type) {
       case 'pdf':
         return PDF.fromJson(json);
       case 'video':
         return Video.fromJson(json);
       default:
-        throw Exception('Type de cours inconnu: $type');
+        return DefaultCours.fromJson(json);
     }
+  }
+  
+  Map<String, dynamic> toJson() {
+    return {
+      'idCours': idCours,
+      'titre': titre,
+      'description': description,
+    };
+  }
+}
+
+// Une classe par défaut qui étend Cours
+class DefaultCours extends Cours {
+  DefaultCours({
+    required int idCours,
+    required String titre,
+    required String description,
+  }) : super(
+          idCours: idCours,
+          titre: titre,
+          description: description,
+        );
+
+  factory DefaultCours.fromJson(Map<String, dynamic> json) {
+    return DefaultCours(
+      idCours: json['idCours'] ?? 0,
+      titre: json['titre'] ?? '',
+      description: json['description'] ?? '',
+    );
   }
 }
