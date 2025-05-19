@@ -4,6 +4,8 @@ import '../modules/course/bindings/course_binding.dart';
 import '../modules/course/views/course_view.dart';
 import '../modules/course_details/bindings/course_details_binding.dart';
 import '../modules/course_details/views/course_details_view.dart';
+import '../modules/evaluation/bindings/evaluation_binding.dart';
+import '../modules/evaluation/views/evaluation_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/homePage/bindings/home_page_binding.dart';
@@ -16,6 +18,8 @@ import '../modules/onboarding2/bindings/onboarding2_binding.dart';
 import '../modules/onboarding2/views/onboarding2_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
 import '../modules/profile/views/profile_view.dart';
+import '../modules/quizz/bindings/quizz_binding.dart';
+import '../modules/quizz/views/quizz_view.dart';
 import '../modules/register/bindings/register_binding.dart';
 import '../modules/register/views/register_view.dart';
 import '../modules/settings/bindings/settings_binding.dart';
@@ -85,13 +89,23 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.PROFILE,
-      page: () => const ProfileView(),
+      page: () => ProfileView(),
       binding: ProfileBinding(),
     ),
     GetPage(
       name: _Paths.SETTINGS,
       page: () => const SettingsView(),
       binding: SettingsBinding(),
+    ),
+    GetPage(
+      name: _Paths.QUIZZ,
+      page: () => QuizzView(),
+      binding: QuizzBinding(),
+    ),
+    GetPage(
+      name: _Paths.EVALUATION,
+      page: () => const EvaluationView(),
+      binding: EvaluationBinding(),
     ),
   ];
 }

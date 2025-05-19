@@ -1,23 +1,30 @@
 import 'package:get/get.dart';
 
 class ProfileController extends GetxController {
-  //TODO: Implement ProfileController
+  var enrollments = <Map<String, dynamic>>[].obs;
+  var loading = false.obs;
+  var error = ''.obs;
 
-  final count = 0.obs;
   @override
   void onInit() {
     super.onInit();
+    fetchEnrollments();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
+  void fetchEnrollments() async {
+    loading.value = true;
+    await Future.delayed(Duration(seconds: 2)); // Simule un chargement
 
-  @override
-  void onClose() {
-    super.onClose();
+    try {
+      enrollments.value = [
+        {'id': 1, 'title': 'Flutter Basics'},
+        {'id': 2, 'title': 'Advanced Dart'},
+      ];
+      error.value = '';
+    } catch (e) {
+      error.value = 'Failed to load courses';
+    } finally {
+      loading.value = false;
+    }
   }
-
-  void increment() => count.value++;
 }

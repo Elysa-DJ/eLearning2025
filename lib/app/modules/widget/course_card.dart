@@ -37,6 +37,7 @@ class CourseCard extends StatelessWidget {
           price: 49.99,
           chapters: [
             Chapter(
+              id: 'chapter1',
               title: 'Introduction aux technologies web',
               description: 'Vue d\'ensemble des technologies web modernes',
               learningTime: 60,
@@ -45,7 +46,7 @@ class CourseCard extends StatelessWidget {
                   title: 'HTML5 Fondamentaux',
                   description: 'Les bases de HTML5',
                   videoUrl: 'assets/video/[@AnimesGratuit] The Eminence in Shadow S02EP04 VF.mp4',
-                  pdfUrl: 'assets/pdf/TD_v1.pdf', // Chemin d'asset correctement formaté
+                  pdfUrl: 'https://www.tresfacile.net/doc/python/python-tres-facile-preview.pdf', // Chemin d'asset correctement formaté
                 ),
                 Section(
                   title: 'CSS3 Essentiels',
@@ -56,6 +57,7 @@ class CourseCard extends StatelessWidget {
               ],
             ),
             Chapter(
+              id: 'chapter2',
               title: 'JavaScript Moderne',
               description: 'Les fondamentaux de JavaScript',
               learningTime: 90,

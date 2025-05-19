@@ -31,12 +31,14 @@ class Course {
 }
 
 class Chapter {
+  final String id;
   final String title;
   final String description;
   final List<Section> sections;
   final int learningTime; // in minutes
 
   Chapter({
+    required this.id,
     required this.title,
     required this.description,
     this.sections = const [],
