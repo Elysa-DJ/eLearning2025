@@ -53,7 +53,7 @@ class AccountInfoForm extends StatelessWidget {
                     ),
                   ),
                   child: const Text(
-                    "Back",
+                    "Précédent",
                     style: TextStyle(fontSize: 16, color: Colors.black87),
                   ),
                 ),
@@ -71,7 +71,7 @@ class AccountInfoForm extends StatelessWidget {
                     ),
                   ),
                   child: ElevatedButton(
-                    onPressed: controller.registerUser,
+                    onPressed: controller.goToConfirmationStep,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.transparent,
                       shadowColor: Colors.transparent,
@@ -81,7 +81,7 @@ class AccountInfoForm extends StatelessWidget {
                       ),
                     ),
                     child: const Text(
-                      "Sign Up",
+                      "suivant",
                       style: TextStyle(fontSize: 18, color: Colors.white),
                     ),
                   ),
@@ -121,4 +121,7 @@ class AccountInfoForm extends StatelessWidget {
       ),
     );
   }
+
+
+
 }

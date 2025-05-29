@@ -5,77 +5,53 @@
 import '../models/quiz.dart';
 
 class QuizService {
-  Future<Quiz> fetchQuiz(String courseId, String chapterId) async {
-    // Simulate API delay
+ Future<Quiz> fetchQuiz(String courseId, String chapterId) async {
+    // Simule un délai d'attente de l'API
     await Future.delayed(const Duration(milliseconds: 800));
     
-    // Simulated quiz data
+    // Données du quiz simulées
     return Quiz(
       id: 'quiz101',
       courseId: courseId,
       chapterId: chapterId,
-      title: 'Chapter Quiz',
-      description: 'Test your knowledge of the chapter content.',
+      title: 'Quiz du chapitre',
+      description: 'Testez vos connaissances sur le contenu du chapitre.',
       timeLimit: 15,
       passingScore: 70,
       questions: [
         Question(
           id: 'q1',
           type: QuestionType.multipleChoice,
-          text: 'What is the main purpose of state management in Flutter?',
+          text: 'Quel est le principal objectif de la gestion d’état dans Flutter ?',
           options: [
-            Option(
-              id: 'a',
-              text: 'To manage app navigation',
-            ),
-            Option(
-              id: 'b',
-              text: 'To handle user interface updates efficiently',
-            ),
-            Option(
-              id: 'c',
-              text: 'To store data locally',
-            ),
-            Option(
-              id: 'd',
-              text: 'To make API calls',
-            ),
+            Option(id: 'a', text: 'Gérer la navigation de l’application'),
+            Option(id: 'b', text: 'Gérer efficacement les mises à jour de l’interface utilisateur'),
+            Option(id: 'c', text: 'Stocker les données localement'),
+            Option(id: 'd', text: 'Effectuer des appels API'),
           ],
         ),
         Question(
           id: 'q2',
           type: QuestionType.multipleSelect,
-          text: 'Which of the following are valid state management solutions in Flutter?',
+          text: 'Lesquelles des solutions suivantes sont valides pour la gestion d’état dans Flutter ?',
           options: [
-            Option(
-              id: 'a',
-              text: 'GetX',
-            ),
-            Option(
-              id: 'b',
-              text: 'Provider',
-            ),
-            Option(
-              id: 'c',
-              text: 'Bloc',
-            ),
-            Option(
-              id: 'd',
-              text: 'Redux',
-            ),
+            Option(id: 'a', text: 'GetX'),
+            Option(id: 'b', text: 'Provider'),
+            Option(id: 'c', text: 'Bloc'),
+            Option(id: 'd', text: 'Redux'),
           ],
         ),
         Question(
           id: 'q3',
           type: QuestionType.text,
-          text: 'What widget would you use to create a scrollable list of items?',
+          text: 'Quel widget utiliseriez-vous pour créer une liste défilante d’éléments ?',
           multiline: false,
         ),
         Question(
           id: 'q4',
           type: QuestionType.calculation,
-          text: 'If a ListView has 3 items and each item has 2 child widgets, how many widgets are rendered in total?',
-          formula: 'Parent + (Items × Children)',
+          text: 'Si un ListView contient 3 éléments et que chaque élément a 2 widgets enfants, combien de widgets sont rendus au total ?',
+          formula: 'Parent + (Éléments × Enfants)',
           unit: 'widgets',
         ),
       ],
@@ -89,19 +65,19 @@ class QuizService {
     Map<String, dynamic> answers,
     int timeSpent,
   ) async {
-    // Simulate API delay
+    // Simule un délai d’attente de l’API
     await Future.delayed(const Duration(milliseconds: 800));
     
-    // Simulate quiz grading
-    final score = 85; // Simulated score
+    // Simulation de la notation du quiz
+    final score = 85;
     final correctCount = 8;
     final incorrectCount = 1;
     final unansweredCount = 1;
     
     return QuizSubmission(
-      id: 'submission${DateTime.now().millisecondsSinceEpoch}',
+      id: 'soumission${DateTime.now().millisecondsSinceEpoch}',
       quizId: quizId,
-      userId: 'user1',
+      userId: 'utilisateur1',
       score: score,
       timeSpent: timeSpent,
       correctCount: correctCount,
@@ -115,12 +91,12 @@ class QuizService {
       },
       userAnswers: answers,
       feedback: score >= 90
-          ? 'Excellent work! You have a strong understanding of the concepts.'
+          ? 'Excellent travail ! Vous avez une excellente compréhension des concepts.'
           : score >= 80
-              ? 'Great job! You have a good grasp of the material.'
+              ? 'Très bon travail ! Vous avez une bonne maîtrise du sujet.'
               : score >= 70
-                  ? 'Good effort! Review some concepts to improve further.'
-                  : 'Keep practicing! Review the chapter material and try again.',
+                  ? 'Bon effort ! Revoyez quelques notions pour vous améliorer.'
+                  : 'Continuez à pratiquer ! Revoyez le contenu du chapitre et réessayez.',
     );
   }
 }

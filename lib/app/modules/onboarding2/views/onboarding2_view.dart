@@ -62,7 +62,7 @@ class Onboarding extends StatelessWidget {
               // Logo centré en haut
               Center(
                 child: Image.asset(
-                  'assets/logo.png',
+                  'assets/emonaya.png',
                   width: 80,
                 ),
               ),

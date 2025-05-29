@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
-import '../../../routes/app_pages.dart';
+
 import '../../onboarding2/views/onboarding2_view.dart';
+import '../../widget/gradient_button.dart';
 import '../controllers/login_controller.dart';
 
 class LoginView extends GetView<LoginController> {
@@ -22,7 +23,7 @@ class LoginView extends GetView<LoginController> {
         ),
         child: Padding(
           padding: const EdgeInsets.only(top: 60.0, left:22 ),
-          child: Text('Hello!\n Bienvenu sur notre application',
+          child: Text('Bonjour!\n Bienvenu sur notre application de soutien scolaire',
           style: TextStyle(
             fontSize: 30,
             color: Colors.white,
@@ -47,7 +48,7 @@ class LoginView extends GetView<LoginController> {
           ),
 
       Padding(
-        padding: const EdgeInsets.only(top:200.0, ),
+        padding: const EdgeInsets.only(top: 250.0, ),
         child: Container(
 
           decoration: BoxDecoration(
@@ -64,90 +65,76 @@ class LoginView extends GetView<LoginController> {
             child: Padding(
               padding: const EdgeInsets.only(left: 18.0, right:18),
               
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextField(
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.email, color: Colors.grey),
-                        hintText: "Email",
-                        hintStyle: const TextStyle(color: Colors.grey),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                    ),
-                     SizedBox(height: 20,),
-
-                   TextField(
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.lock, color: Colors.grey),
-                        hintText: "Password",
-                        hintStyle: const TextStyle(color: Colors.grey),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                    ),
-                  SizedBox(height: 20,),
-
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                        onPressed: () {},
-                        child: const Text(
-                          "Forgot Password",
-                          style: TextStyle(color: Colors.blue),
-                        ),
-                      ),
-                  ), 
-
-                  SizedBox(height: 30,),
-                  SizedBox(
-                    width: double.infinity,
-                    child: Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          gradient: const LinearGradient(
-                            colors: [Color(0xFF03A9F4), Color(0xff281537)],
-                              begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
+              child: Form(
+                key: controller.formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextFormField(
+                        controller: controller.nameController,
+                        validator: controller.validateName,
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.person, color: Colors.grey),
+                          hintText: "Nom d'utilisateur",
+                          hintStyle: const TextStyle(color: Colors.grey),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
                           ),
                         ),
-                  child: ElevatedButton(
-                  onPressed: () {
-                    Get.toNamed(Routes.HOME_PAGE);
-                  },
-                  style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent, // Rend le bouton transparent pour voir le gradient
-                  shadowColor: Colors.transparent, // Supprime l'ombre
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                  shape: RoundedRectangleBorder(
-                   borderRadius: BorderRadius.circular(30),
-                  ),
-                  ),
-              child: const Text(
-              "Login",
-              style: TextStyle(fontSize: 18, color: Colors.white),
-              ),
-    ),
-  ),
-),
-
-                  SizedBox(height: 30,),
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SocialIcon(iconPath: "assets/google.png"),
-                        SizedBox(width: 20),
-                        SocialIcon(iconPath: "assets/facebook.png"),
-                        SizedBox(width: 20),
-                        SocialIcon(iconPath: "assets/apple.png"),
-                      ],
-                    ),
-
-                ],
+                      ),
+                       SizedBox(height: 20,),
+                
+                     TextFormField(
+                        obscureText: true,
+                        controller: controller.passwordController,
+                        validator: controller.validatePassword,
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.lock, color: Colors.grey),
+                          hintText: "Mot de passe",
+                          hintStyle: const TextStyle(color: Colors.grey),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      ),
+                    SizedBox(height: 20,),
+                
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                          onPressed: () {},
+                          child: const Text(
+                            "Mot de passe oublie?",
+                            style: TextStyle(color: Colors.blue),
+                          ),
+                        ),
+                    ), 
+                
+                    SizedBox(height: 30,),
+                    Obx(()=>
+                    GradientAuthButton(
+                      isSubmitting: controller.isSubmitting.value,
+                      onPressed: () {
+                        controller.login();
+                      },
+                      text: "se connecter",
+                    ),),
+                  
+                
+                    SizedBox(height: 30,),
+                      const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SocialIcon(iconPath: "assets/google.png"),
+                          SizedBox(width: 20),
+                          SocialIcon(iconPath: "assets/facebook.png"),
+                          SizedBox(width: 20),
+                          SocialIcon(iconPath: "assets/apple.png"),
+                        ],
+                      ),
+                
+                  ],
+                ),
               ),
             ),
             

@@ -5,6 +5,8 @@ import '../../onboarding2/views/onboarding2_view.dart';
 import '../controllers/register_controller.dart';
 import 'components/personnal_info_form.dart';
 import 'components/account_info_form.dart';
+import 'components/cycle_form.dart';
+import 'components/classe_form.dart';
 import 'components/step_indicator.dart';
 
 class RegisterView extends GetView<RegisterController> {
@@ -75,27 +77,28 @@ class RegisterView extends GetView<RegisterController> {
                       ),
                       SizedBox(height: 20),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Sign Up",
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blue[800],
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Sign Up",
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue[800],
+                              ),
                             ),
-                          ),
-                          StepIndicator(
-                            currentStep: controller.currentStep.value,
-                            totalSteps: 2,
-                          ),
-                        ],
-                      ),
+                            Flexible(
+                              child: Obx(() => StepIndicator(
+                                    currentStep: controller.currentStep.value,
+                                    totalSteps: 5,
+                                  )),
+                            ),
+                          ],
+                        ),
+
                       SizedBox(height: 5),
                       Obx(() => Text(
-                        controller.currentStep.value == 0 
-                            ? "Personal Information" 
-                            : "Account Information",
+                        controller.getCurrentStepTitle(),
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.grey[600],
@@ -103,9 +106,20 @@ class RegisterView extends GetView<RegisterController> {
                       )),
                       SizedBox(height: 20),
                       Expanded(
-                        child: Obx(() => controller.currentStep.value == 0 
-                            ? PersonalInfoForm(controller: controller)
-                            : AccountInfoForm(controller: controller)),
+                        child: Obx(() {
+                          switch (controller.currentStep.value) {
+                            case 0:
+                              return PersonalInfoForm(controller: controller);
+                            case 1:
+                              return CycleForm(controller: controller);
+                            case 2:
+                              return ClassForm(controller: controller);
+                            case 3:
+                              return AccountInfoForm(controller: controller);
+                            default:
+                              return PersonalInfoForm(controller: controller);
+                          }
+                        }),
                       ),
                     ],
                   ),

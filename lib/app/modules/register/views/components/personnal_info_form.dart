@@ -10,6 +10,7 @@ class PersonalInfoForm extends StatelessWidget {
   }) : super(key: key);
 
   @override
+
   Widget build(BuildContext context) {
     return Form(
       key: controller.personalInfoFormKey,
@@ -76,22 +77,18 @@ class PersonalInfoForm extends StatelessWidget {
                 ),
               ),
               child: ElevatedButton(
-                onPressed: controller.nextStep,
+                onPressed: () => controller.nextStep(), // Le contrôleur gère déjà la validation
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  shadowColor: Colors.transparent,
-                  padding: const EdgeInsets.symmetric(vertical: 15),
+                  backgroundColor: Colors.blue,
+                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 12),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
+                    borderRadius: BorderRadius.circular(25),
                   ),
                 ),
-                child: const Text(
-                  "Next",
-                  style: TextStyle(fontSize: 18, color: Colors.white),
+                child: Text("Suivant", style: TextStyle(color: Colors.white)),
                 ),
               ),
             ),
-          ),
         ],
       ),
     ),

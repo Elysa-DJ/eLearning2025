@@ -12,10 +12,10 @@ class StepIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
+    return Wrap(
+      spacing: 6, // Espace entre les éléments
+      crossAxisAlignment: WrapCrossAlignment.center,
       children: List.generate(totalSteps * 2 - 1, (index) {
-        // Even indices are the circle steps, odd indices are connectors
         if (index % 2 == 0) {
           final stepIndex = index ~/ 2;
           return _buildStepCircle(stepIndex);
@@ -30,8 +30,8 @@ class StepIndicator extends StatelessWidget {
   Widget _buildStepCircle(int step) {
     final isActive = step <= currentStep;
     return Container(
-      width: 30,
-      height: 30,
+      width: 26, // Réduit pour s'adapter à l'écran
+      height: 26,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: isActive ? Colors.blue : Colors.grey[300],
@@ -40,6 +40,7 @@ class StepIndicator extends StatelessWidget {
         child: Text(
           "${step + 1}",
           style: TextStyle(
+            fontSize: 12,
             color: isActive ? Colors.white : Colors.grey[600],
             fontWeight: FontWeight.bold,
           ),
@@ -51,7 +52,7 @@ class StepIndicator extends StatelessWidget {
   Widget _buildConnector(int index) {
     final isActive = index < currentStep;
     return Container(
-      width: 30,
+      width: 16, // Réduit pour éviter l’overflow
       height: 2,
       color: isActive ? Colors.blue : Colors.grey[300],
     );

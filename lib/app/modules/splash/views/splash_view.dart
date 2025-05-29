@@ -42,7 +42,7 @@ class SplashScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                   Image.asset(
-                    'assets/logo.png', // Remplace avec ton image
+                    'assets/emonaya.png', // Remplace avec ton image
                     width: 150,
                     height: 200,
                   ),
