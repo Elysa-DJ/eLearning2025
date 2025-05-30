@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 
 import '../../core/config/api_config.dart';
 import '../models/register.dart';
+import '../models/user.dart';
 
 class ApiException implements Exception {
   final String message;
@@ -145,38 +146,65 @@ class ApiService extends GetxService {
   }
 
   // Méthode générique pour les requêtes HTTP
-  Future<T> _handleRequest<T>({
-    required Future<http.Response> Function() requestFunction,
-    required T Function(dynamic data) onSuccess,
-    String errorMessage = 'Erreur de requête',
-  }) async {
-    try {
-      final response = await requestFunction();
-      final data = json.decode(response.body);
+  // Future<T> _handleRequest<T>({
+  //   required Future<http.Response> Function() requestFunction,
+  //   required T Function(dynamic data) onSuccess,
+  //   String errorMessage = 'Erreur de requête',
+  // }) async {
+  //   try {
+  //     final response = await requestFunction();
+  //     final data = json.decode(response.body);
 
-      if (response.statusCode >= 200 && response.statusCode < 300) {
-        return onSuccess(data['data']);
-      } else {
-        throw ApiException(
-          message: data['message'] ?? errorMessage,
-          statusCode: response.statusCode,
-          data: data,
-        );
-      }
-    } on http.ClientException catch (e) {
+  //     if (response.statusCode >= 200 && response.statusCode < 300) {
+  //       return onSuccess(data['data']);
+  //     } else {
+  //       throw ApiException(
+  //         message: data['message'] ?? errorMessage,
+  //         statusCode: response.statusCode,
+  //         data: data,
+  //       );
+  //     }
+  //   } on http.ClientException catch (e) {
+  //     throw ApiException(
+  //       message: 'Erreur de connexion: ${e.message}',
+  //     );
+  //   } on FormatException {
+  //     throw ApiException(
+  //       message: 'Erreur de format de réponse',
+  //     );
+  //   } catch (e) {
+  //     throw ApiException(
+  //       message: 'Erreur inattendue: $e',
+  //     );
+  //   }
+  // }
+
+  Future<T> _handleRequest<T>({
+  required Future<http.Response> Function() requestFunction,
+  required T Function(dynamic data) onSuccess,
+  String errorMessage = 'Erreur de requête',
+}) async {
+  try {
+    final response = await requestFunction();
+    final data = json.decode(response.body);
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      // Si la réponse contient 'data', on l'utilise, sinon on utilise la racine
+      final payload = data.containsKey('data') ? data['data'] : data;
+      return onSuccess(payload);
+    } else {
       throw ApiException(
-        message: 'Erreur de connexion: ${e.message}',
-      );
-    } on FormatException {
-      throw ApiException(
-        message: 'Erreur de format de réponse',
-      );
-    } catch (e) {
-      throw ApiException(
-        message: 'Erreur inattendue: $e',
+        message: data['message'] ?? errorMessage,
+        statusCode: response.statusCode,
+        data: data,
       );
     }
+  } catch (e) {
+    // gestion des exceptions
+    throw ApiException(message: 'Erreur inattendue: $e');
   }
+}
+
 
   // Méthodes CRUD génériques
   Future<T> get<T>(String endpoint, T Function(dynamic) fromJson) async {
@@ -236,18 +264,21 @@ class ApiService extends GetxService {
       {'name': name, 'password': password},
       (data) => data as Map<String, dynamic>,
     );
+    print('DEBUG login response: $response');
+    if (response['accessToken'] != null) {
+       final _accessToken = response['accessToken'];
+      final _refreshToken = response['refreshToken'];
+  await _saveAuthToken(
+    accessToken: _accessToken,
+    refreshToken: _refreshToken,
+  );
+} else {
+  throw ApiException(message: 'Token non trouvé dans la réponse');
+}
 
-    if (response['data']['accessToken'] != null) {
-     // ignore: no_leading_underscores_for_local_identifiers
-     final _accessToken = response['accessToken'];
-     // ignore: no_leading_underscores_for_local_identifiers
-     final _refreshToken = response['accessToken'];
-      await _saveAuthToken(
-        accessToken: _accessToken,refreshToken: _refreshToken);
-    } else {
-      throw ApiException(message: 'Token non trouvé dans la réponse');
-    }
   }
+
+  
 
  Future registerUser(RegisterRequest registrationData) async {
   try {
@@ -274,6 +305,34 @@ class ApiService extends GetxService {
     rethrow;
   }
 }
+
+
+Future<User> getProfile() async {
+  if (_accessToken == null) {
+    throw ApiException(message: 'Token d\'authentification introuvable');
+  }
+
+  final response = await http.get(
+    Uri.parse('$baseUrl/me'), // Assure-toi que cette route existe côté Laravel
+    headers: {
+      'Authorization': 'Bearer $_accessToken',
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+  );
+
+  if (response.statusCode == 200) {
+    final jsonData = json.decode(response.body);
+    return User.fromJson(jsonData); // Tu as déjà un modèle User
+  } else {
+    throw ApiException(
+      message: 'Erreur lors de la récupération du profil',
+      statusCode: response.statusCode,
+      data: json.decode(response.body),
+    );
+  }
+}
+
 
   Future<void> logout() async {
     _accessToken = null;

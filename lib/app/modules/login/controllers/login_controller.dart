@@ -62,6 +62,7 @@ class LoginController extends GetxController {
       Get.offAllNamed(Routes.HOME_PAGE);
     }catch(e){
       Get.snackbar('Error', e.toString());
+      print('Erreur : $e');
     }
     finally{
       isSubmitting.value = false;

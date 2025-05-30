@@ -24,7 +24,7 @@ class ProfileView extends GetView<ProfileController> {
                 children: [
                   _buildSection(
                     icon: FeatherIcons.book,
-                    title: 'My Courses',
+                    title: 'Mes cours',
                     color: const Color(0xFF3B82F6),
                     child: _buildCourses(),
                   ),
@@ -68,6 +68,9 @@ class ProfileView extends GetView<ProfileController> {
   }
 
   Widget _buildHeader() {
+  return Obx(() {
+    final user = controller.user.value;
+
     return Container(
       padding: const EdgeInsets.all(20),
       color: Colors.white,
@@ -80,38 +83,43 @@ class ProfileView extends GetView<ProfileController> {
             ),
           ),
           const SizedBox(height: 16),
-          const Text(
-            'John Doe',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700, color: Color(0xFF1F2937)),
+
+          /// 👇 Si `user` est null, affiche "Chargement..."
+          Text(
+            user?.name ?? 'Chargement...',
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700, color: Color(0xFF1F2937)),
           ),
-          const Text(
-            'john.doe@example.com',
-            style: TextStyle(fontSize: 16, color: Color(0xFF6B7280)),
+
+          Text(
+            user?.email ?? '...',
+            style: const TextStyle(fontSize: 16, color: Color(0xFF6B7280)),
           ),
+
           const SizedBox(height: 16),
-          Obx(() {
-            return Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF3F4F6),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _buildStat('Courses', controller.enrollments.length.toString()),
-                  Container(width: 1, height: 40, color: const Color(0xFFD1D5DB)),
-                  _buildStat('Completed', '8'),
-                  Container(width: 1, height: 40, color: const Color(0xFFD1D5DB)),
-                  _buildStat('Average', '92%'),
-                ],
-              ),
-            );
-          }),
+
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF3F4F6),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _buildStat('Cours', controller.enrollments.length.toString()),
+                Container(width: 1, height: 40, color: const Color(0xFFD1D5DB)),
+                _buildStat('Terminés', '8'),
+                Container(width: 1, height: 40, color: const Color(0xFFD1D5DB)),
+                _buildStat('Pourcentage', '92%'),
+              ],
+            ),
+          ),
         ],
       ),
     );
-  }
+  });
+}
+
 
   Widget _buildStat(String label, String value) {
     return Expanded(

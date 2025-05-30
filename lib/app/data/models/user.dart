@@ -12,12 +12,21 @@ class User {
    this.email
    });
 
-  factory User.fromJson(Map json) {
+  factory User.fromJson(Map<String, dynamic> json) {
     return User(
       id: json['id'],
       name: json['name'],
       password: json['password'],
       email: json['email'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'password': password,
+      if (email != null) 'email': email,
+    };
   }
 }
