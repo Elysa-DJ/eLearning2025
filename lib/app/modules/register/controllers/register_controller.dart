@@ -1,16 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../data/services/api_service.dart';
+import '../../../data/models/register.dart'; // Assurez-vous d'importer le modèle RegisterRequest
+import '../../../routes/app_pages.dart';
 import '../views/components/confirmation_form.dart';
 
 class RegisterController extends GetxController {
+  
+  ApiService _apiService = Get.find<ApiService>();
+  
+  // Loading state
+  final isLoading = false.obs;
+  
   // Current step tracker (0 à 3 maintenant - confirmation n'est plus une étape)
   final currentStep = 0.obs;
-  
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
   // Form keys for validation
   final personalInfoFormKey = GlobalKey<FormState>();
   final cycleFormKey = GlobalKey<FormState>();
   final classFormKey = GlobalKey<FormState>();
+
   final accountInfoFormKey = GlobalKey<FormState>();
   final confirmationFormKey = GlobalKey<FormState>();
   
@@ -35,6 +45,20 @@ class RegisterController extends GetxController {
   
   // Date of birth
   final selectedDate = Rx<DateTime?>(null);
+
+  @override
+  void onClose() {
+    nameController.dispose();
+    surnameController.dispose();
+    dateOfBirthController.dispose();
+    cityController.dispose();
+    emailController.dispose();
+    usernameController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    phoneController.dispose();
+    super.onClose();
+  }
   
   void nextStep() {
     switch (currentStep.value) {
@@ -84,8 +108,6 @@ class RegisterController extends GetxController {
     }
   }
   
-  
-  
   String getCurrentStepTitle() {
     switch (currentStep.value) {
       case 0:
@@ -129,27 +151,8 @@ class RegisterController extends GetxController {
       dateOfBirthController.text = "${picked.day}/${picked.month}/${picked.year}";
     }
   }
-  
-  void registerUser() {
-    if (accountInfoFormKey.currentState!.validate()) {
-      // TODO: Implement user registration logic
-      print('User registration data:');
-      print('Name: ${nameController.text}');
-      print('Surname: ${surnameController.text}');
-      print('Date of Birth: ${dateOfBirthController.text}');
-      print('City: ${cityController.text}');
-      print('Email: ${emailController.text}');
-      print('Cycle: ${selectedCycle.value}');
-      print('Classe: ${selectedClass.value}');
-      print('Username: ${usernameController.text}');
-      print('Password: ${passwordController.text}');
-      print('Phone: ${phoneController.text}');
-      
-      // Proceed with registration
-      // Get.offAllNamed(Routes.HOME);
-    }
-  }
-  
+
+  // Validation methods
   String? validateName(String? value) {
     if (value == null || value.isEmpty) {
       return 'Name is required';
@@ -214,7 +217,7 @@ class RegisterController extends GetxController {
     }
     return null;
   }
-  
+
   String? validatePhone(String? value) {
     if (value == null || value.isEmpty) {
       return null; // Phone is optional
@@ -225,17 +228,82 @@ class RegisterController extends GetxController {
     return null;
   }
   
-  @override
-  void onClose() {
-    nameController.dispose();
-    surnameController.dispose();
-    dateOfBirthController.dispose();
-    cityController.dispose();
-    emailController.dispose();
-    usernameController.dispose();
-    passwordController.dispose();
-    confirmPasswordController.dispose();
-    phoneController.dispose();
-    super.onClose();
+  String? validateCycle(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Cycle is required';
+    }
+    return null;
+  }
+  
+  String? validateClass(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Class is required';
+    }
+    return null;
+  }
+  
+  bool validateForm() {
+    return formKey.currentState?.validate() ?? false;
+  }
+  
+  // Méthode corrigée pour l'inscription
+  Future<void> registerUser() async {
+    try {
+      // Activer le loading
+      isLoading.value = true;
+      
+      // Créer l'objet RegisterRequest avec les données du formulaire
+      final registerRequest = RegisterRequest(
+        name: nameController.text.trim(),
+        surname: surnameController.text.trim(),
+        dateOfBirth: dateOfBirthController.text.trim(),
+        city: cityController.text.trim(),
+        email: emailController.text.trim(),
+        username: usernameController.text.trim(),
+        password: passwordController.text,
+        phone: phoneController.text.trim().isEmpty ? null : phoneController.text.trim(),
+        cycle: selectedCycle.value,
+        className: selectedClass.value, // Attention au nom du champ
+      );
+      
+      // Appeler l'API service avec l'objet RegisterRequest
+      await _apiService.registerUser(registerRequest);
+      
+      // Afficher un message de succès
+      Get.snackbar(
+        'Succès',
+        'Inscription réussie !',
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+        snackPosition: SnackPosition.TOP,
+      );
+      
+      // Rediriger vers la page d'accueil
+      Get.offAllNamed(Routes.HOME_PAGE);
+      
+    } catch (e) {
+      // Gestion des erreurs
+      String errorMessage = 'Une erreur est survenue lors de l\'inscription';
+      
+      if (e is ApiException) {
+        errorMessage = e.message;
+      } else {
+        errorMessage = e.toString();
+      }
+      
+      Get.snackbar(
+        'Erreur',
+        errorMessage,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        snackPosition: SnackPosition.TOP,
+        duration: Duration(seconds: 5),
+      );
+      
+      print('Erreur inscription: $e');
+    } finally {
+      // Désactiver le loading
+      isLoading.value = false;
+    }
   }
 }

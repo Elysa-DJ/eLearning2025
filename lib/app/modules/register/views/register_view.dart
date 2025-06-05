@@ -60,7 +60,9 @@ class RegisterView extends GetView<RegisterController> {
                 ),
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-                  child: Column(
+                  child: Form(
+                    key: controller.formKey,
+                    child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       GestureDetector(
@@ -105,8 +107,10 @@ class RegisterView extends GetView<RegisterController> {
                         ),
                       )),
                       SizedBox(height: 20),
+                      
                       Expanded(
                         child: Obx(() {
+                          
                           switch (controller.currentStep.value) {
                             case 0:
                               return PersonalInfoForm(controller: controller);
@@ -122,6 +126,7 @@ class RegisterView extends GetView<RegisterController> {
                         }),
                       ),
                     ],
+                  ),
                   ),
                 ),
               ),

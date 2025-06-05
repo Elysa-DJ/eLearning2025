@@ -180,30 +180,37 @@ class ApiService extends GetxService {
   // }
 
   Future<T> _handleRequest<T>({
-  required Future<http.Response> Function() requestFunction,
-  required T Function(dynamic data) onSuccess,
-  String errorMessage = 'Erreur de requête',
-}) async {
-  try {
-    final response = await requestFunction();
-    final data = json.decode(response.body);
+    required Future<http.Response> Function() requestFunction,
+    required T Function(dynamic data) onSuccess,
+    String errorMessage = 'Erreur de requête',
+  }) async {
+    try {
+      final response = await requestFunction();
+      final data = json.decode(response.body);
 
-    if (response.statusCode >= 200 && response.statusCode < 300) {
-      // Si la réponse contient 'data', on l'utilise, sinon on utilise la racine
-      final payload = data.containsKey('data') ? data['data'] : data;
-      return onSuccess(payload);
-    } else {
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        return onSuccess(data);
+      } else {
+        throw ApiException(
+          message: data['message'] ?? errorMessage,
+          statusCode: response.statusCode,
+          data: data,
+        );
+      }
+    } on http.ClientException catch (e) {
       throw ApiException(
-        message: data['message'] ?? errorMessage,
-        statusCode: response.statusCode,
-        data: data,
+        message: 'Erreur de connexion: ${e.message}',
+      );
+    } on FormatException {
+      throw ApiException(
+        message: 'Erreur de format de réponse',
+      );
+    } catch (e) {
+      throw ApiException(
+        message: 'Erreur inattendue: $e',
       );
     }
-  } catch (e) {
-    // gestion des exceptions
-    throw ApiException(message: 'Erreur inattendue: $e');
   }
-}
 
 
   // Méthodes CRUD génériques
@@ -280,7 +287,7 @@ class ApiService extends GetxService {
 
   
 
- Future registerUser(RegisterRequest registrationData) async {
+Future<void> registerUser(RegisterRequest registrationData) async {
   try {
     final response = await post<Map<String, dynamic>>(
       ApiConfig.register,
@@ -313,7 +320,7 @@ Future<User> getProfile() async {
   }
 
   final response = await http.get(
-    Uri.parse('$baseUrl/me'), // Assure-toi que cette route existe côté Laravel
+    Uri.parse('$baseUrl/profile'), // Assure-toi que cette route existe côté Laravel
     headers: {
       'Authorization': 'Bearer $_accessToken',
       'Accept': 'application/json',
