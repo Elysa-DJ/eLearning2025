@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class CustomDrawer extends StatelessWidget {
-  const CustomDrawer({super.key});
+  // ignore: prefer_typing_uninitialized_variables
+  final controller;
+  const CustomDrawer({
+    required this.controller, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,15 +22,15 @@ class CustomDrawer extends StatelessWidget {
                 'https://images.pexels.com/photos/3769021/pexels-photo-3769021.jpeg',
               ),
             ),
-            accountName: const Text(
-              'John Doe',
+            accountName: Text(
+              controller.currentUser?.name ?? '',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            accountEmail: const Text(
-              'john.doe@example.com',
+            accountEmail: Text(
+              controller.currentUser?.email ?? '',
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.white70,
@@ -68,10 +71,14 @@ class CustomDrawer extends StatelessWidget {
                     'Déconnexion',
                     style: TextStyle(
                       color: Colors.red,
+            
                     ),
                   ),
                   onTap: () {
                     // Handle logout
+                    controller.logout();
+                    print('logout');
+
                   },
                 ),
               ],

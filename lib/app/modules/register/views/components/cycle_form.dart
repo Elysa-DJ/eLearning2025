@@ -8,7 +8,7 @@ class CycleForm extends StatelessWidget {
   const CycleForm({Key? key, required this.controller}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -29,10 +29,6 @@ class CycleForm extends StatelessWidget {
               _buildCycleOption("Collège", "college"),
               SizedBox(height: 15),
               _buildCycleOption("Lycée", "highschool"),
-              SizedBox(height: 15),
-              _buildCycleOption("Université", "university"),
-              SizedBox(height: 15),
-              _buildCycleOption("Formation professionnelle", "professional"),
             ],
           ),
         ),

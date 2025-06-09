@@ -1,15 +1,27 @@
 import 'package:get/get.dart';
+import '../../../core/config/api_config.dart';
 import '../../../data/models/course.dart';
+import '../../../data/models/user.dart';
+import '../../../data/services/api_service.dart';
+import '../../../routes/app_pages.dart';
 
 class HomePageController extends GetxController {
   final isLoading = true.obs;
   final latestCourses = <Course>[].obs;
   final popularCourses = <Course>[].obs;
+  final _apiService = Get.find<ApiService>();
+  final _currentUser = Rx<User?>(null);
+
+
+  User? get currentUser => _currentUser.value;  
 
   @override
-  void onInit() {
+  void onInit()async {
     super.onInit();
     fetchCourses();
+    if(_apiService.isAuthenticated) {
+      await me();
+    }
   }
 
   Future<void> fetchCourses() async {
@@ -64,5 +76,30 @@ class HomePageController extends GetxController {
       print('Error fetching courses: $e');
       isLoading.value = false;
     }
+
   }
+
+    Future<void> logout() async {
+      try{
+        final response = await _apiService.get<Map<String, dynamic>>(ApiConfig.logout, (data) => data as Map<String, dynamic>);
+        Get.snackbar('Deconnexion', response['message']);
+        await _apiService.logout();
+        Get.offAllNamed(Routes.ONBOARDING2);
+      }catch(e){
+        Get.snackbar('Error', e.toString());
+
+      }finally{
+        Get.offAllNamed(Routes.ONBOARDING2);
+      }
+    }
+    Future<void> me() async {
+      try{
+        final response = await _apiService.get<User>(ApiConfig.me, (data) => User.fromJson(data['data']));
+        _currentUser.value = response;
+        print('Current user: ${_currentUser.value?.toJson()}');
+        _currentUser.refresh();
+      }catch(e){
+        Get.snackbar('Error', e.toString());
+      }
+    }
 }

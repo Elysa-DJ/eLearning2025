@@ -8,12 +8,12 @@ class ConfirmationPage extends StatelessWidget {
 final RegisterController controller;
 
   const ConfirmationPage({
-    Key? key,
+    super.key,
     required this.controller,
-  }) : super(key: key);
+  });
 
   @override
-  Widget build(BuildContext context) {
+ Widget build(BuildContext context) {
     final RegisterController controller = Get.find<RegisterController>();
     
     return Scaffold(
@@ -229,17 +229,6 @@ final RegisterController controller;
       'seconde': 'Seconde',
       'premiere': 'Première',
       'terminale': 'Terminale',
-      'l1': 'Licence 1',
-      'l2': 'Licence 2',
-      'l3': 'Licence 3',
-      'm1': 'Master 1',
-      'm2': 'Master 2',
-      'phd': 'Doctorat',
-      'cap': 'CAP',
-      'bep': 'BEP',
-      'bac_pro': 'Bac Pro',
-      'bts': 'BTS',
-      'dut': 'DUT',
     };
     return classNames[classValue] ?? classValue;
   }
@@ -319,7 +308,6 @@ final RegisterController controller;
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                controller.registerUser();
                 _showSuccessDialog(context);
               },
               style: ElevatedButton.styleFrom(

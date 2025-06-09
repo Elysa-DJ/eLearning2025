@@ -8,7 +8,7 @@ class ClassForm extends StatelessWidget {
   const ClassForm({Key? key, required this.controller}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+ Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -125,44 +125,28 @@ class ClassForm extends StatelessWidget {
     switch (cycle) {
       case 'primary':
         return [
-          {'title': 'CP', 'value': 'cp'},
-          {'title': 'CE1', 'value': 'ce1'},
-          {'title': 'CE2', 'value': 'ce2'},
-          {'title': 'CM1', 'value': 'cm1'},
-          {'title': 'CM2', 'value': 'cm2'},
+          {'id': '1', 'title': 'CP', 'value': 'cp'},
+          {'id': '2', 'title': 'CE1', 'value': 'ce1'},
+          {'id': '3', 'title': 'CE2', 'value': 'ce2'},
+          {'id': '4', 'title': 'CM1', 'value': 'cm1'},
+          {'id': '5', 'title': 'CM2', 'value': 'cm2'},
         ];
       case 'college':
         return [
-          {'title': '6ème', 'value': '6eme'},
-          {'title': '5ème', 'value': '5eme'},
-          {'title': '4ème', 'value': '4eme'},
-          {'title': '3ème', 'value': '3eme'},
+          {'id': '6', 'title': '6ème', 'value': '6eme'},
+          {'id': '7', 'title': '5ème', 'value': '5eme'},
+          {'id': '8', 'title': '4ème', 'value': '4eme'},
+          {'id': '9', 'title': '3ème', 'value': '3eme'},
         ];
       case 'highschool':
         return [
-          {'title': 'Seconde', 'value': 'seconde'},
-          {'title': 'Première', 'value': 'premiere'},
-          {'title': 'Terminale', 'value': 'terminale'},
-        ];
-      case 'university':
-        return [
-          {'title': 'Licence 1', 'value': 'l1'},
-          {'title': 'Licence 2', 'value': 'l2'},
-          {'title': 'Licence 3', 'value': 'l3'},
-          {'title': 'Master 1', 'value': 'm1'},
-          {'title': 'Master 2', 'value': 'm2'},
-          {'title': 'Doctorat', 'value': 'phd'},
-        ];
-      case 'professional':
-        return [
-          {'title': 'CAP', 'value': 'cap'},
-          {'title': 'BEP', 'value': 'bep'},
-          {'title': 'Bac Pro', 'value': 'bac_pro'},
-          {'title': 'BTS', 'value': 'bts'},
-          {'title': 'DUT', 'value': 'dut'},
+          {'id': '10', 'title': 'Seconde', 'value': 'seconde'},
+          {'id': '11', 'title': 'Première', 'value': 'premiere'},
+          {'id': '12', 'title': 'Terminale', 'value': 'terminale'},
         ];
       default:
         return [];
     }
   }
+  
 }

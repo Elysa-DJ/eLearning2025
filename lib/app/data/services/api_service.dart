@@ -7,7 +7,6 @@ import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 
 import '../../core/config/api_config.dart';
-import '../models/register.dart';
 import '../models/user.dart';
 
 class ApiException implements Exception {
@@ -286,32 +285,6 @@ class ApiService extends GetxService {
   }
 
   
-
-Future<void> registerUser(RegisterRequest registrationData) async {
-  try {
-    final response = await post<Map<String, dynamic>>(
-      ApiConfig.register,
-      registrationData.toJson(),
-      (data) => data as Map<String, dynamic>,
-    );
-
-    final accessToken = response['accessToken'] ?? response['access_token'];
-    final refreshToken = response['refreshToken'] ?? response['refresh_token'];
-
-    if (accessToken != null && refreshToken != null) {
-      await _saveAuthToken(
-        accessToken: accessToken,
-        refreshToken: refreshToken,
-      );
-      print('Registration successful');
-    } else {
-      throw ApiException(message: 'Tokens not found in response');
-    }
-  } catch (e) {
-    print('Registration failed: $e');
-    rethrow;
-  }
-}
 
 
 Future<User> getProfile() async {
