@@ -1,17 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+// ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
-import 'package:learning_app/app/core/config/app_config.dart';
+
 
 import '../../../core/config/api_config.dart';
+import '../../../data/models/classe.dart';
+import '../../../data/models/cycle.dart';
 import '../../../data/services/api_service.dart';
 import '../../../routes/app_pages.dart';
 import '../views/components/confirmation_form.dart';
 
 class RegisterController extends GetxController {
   
+ final isSubmitting = false.obs;
  final ApiService _apiService = Get.find<ApiService>();
-  
+
+  final Rx<List> cycles = Rx<List>([]);
+  final Rx<Cycle?> selectedCycle = Rx<Cycle?>(null);
+  final Rx<Classe?> selectedClasse = Rx<Classe?>(null);
+
+  final isRegistered = false.obs;
   // Loading state
   final isLoading = false.obs;
   
@@ -36,17 +45,12 @@ class RegisterController extends GetxController {
   final nationalityController = TextEditingController();
   final academicYearController = TextEditingController();
   final genderController = TextEditingController();
-  
-  // Cycle d'études (étape 1)
-  final selectedCycle = 'primaire'.obs;
-  
-  // Classe (étape 2)
-  final selectedClass = '6e'.obs;
+    // Classe (étape 2)
+
 
   final selectedNationality = 'Congo'.obs;
   final selectedGender = 'Féminin'.obs;
 
-  final selectedAcademicYear = '2024-2025'.obs;
 
 
 
@@ -60,21 +64,9 @@ class RegisterController extends GetxController {
   // Date of birth
   final selectedDate = Rx<DateTime?>(null);
 
-  final List<String> africanCountries = [
-  "Algérie", "Angola", "Bénin", "Botswana", "Burkina Faso", "Burundi",
-  "Cameroun", "Cap-Vert", "Comores", "Congo", "Côte d'Ivoire", "Djibouti",
-  "Égypte", "Érythrée", "Eswatini", "Éthiopie", "Gabon", "Gambie", "Ghana",
-  "Guinée", "Guinée-Bissau", "Guinée équatoriale", "Kenya", "Lesotho",
-  "Liberia", "Libye", "Madagascar", "Malawi", "Mali", "Maroc", "Maurice",
-  "Mauritanie", "Mozambique", "Namibie", "Niger", "Nigeria", "Ouganda",
-  "RDC", "Rwanda", "Sao Tomé-et-Principe", "Sénégal", "Seychelles", 
-  "Sierra Leone", "Somalie", "Soudan", "Soudan du Sud", "Tanzanie",
-  "Tchad", "Togo", "Tunisie", "Zambie", "Zimbabwe"
-];
+  
 
-final List<String> academicYears = [
-  "2023-2024", "2024-2025", "2025-2026"
-];
+
 
   @override
   void onClose() {
@@ -89,6 +81,12 @@ final List<String> academicYears = [
     phoneController.dispose();
     super.onClose();
   }
+
+  @override
+  void onInit()async {
+    super.onInit();
+    await fetchCycles();
+  }
   
   void nextStep() {
     switch (currentStep.value) {
@@ -98,12 +96,12 @@ final List<String> academicYears = [
         }
         break;
       case 1:
-        if (selectedCycle.value.isNotEmpty) {
+        if (selectedCycle.value!=null) {
           currentStep.value++;
         }
         break;
       case 2:
-        if (selectedClass.value.isNotEmpty) {
+        if (selectedClasse.value != null) {
           currentStep.value++;
         }
         break;
@@ -122,7 +120,7 @@ final List<String> academicYears = [
       currentStep.value--;
       // Reset la classe si on revient au cycle
       if (currentStep.value == 1) {
-        selectedClass.value = '';
+        selectedClasse.value = null;
       }
     }
   }
@@ -158,9 +156,9 @@ final List<String> academicYears = [
       case 0:
         return personalInfoFormKey.currentState?.validate() ?? false;
       case 1:
-        return selectedCycle.value.isNotEmpty;
+        return selectedCycle.value != null;
       case 2:
-        return selectedClass.value.isNotEmpty;
+        return selectedClasse.value != null;
       case 3:
         return accountInfoFormKey.currentState?.validate() ?? false;
       default:
@@ -306,45 +304,72 @@ String? validateAcademicYear(String? value) {
     return formKey.currentState?.validate() ?? false;
   }
   
+  Future<void> fetchCycles() async{
+    try {
+      final response = await _apiService.get<List<Cycle>>(
+        ApiConfig.fetchCycles,
+        (data) =>Cycle.fromArrayJson(data['data']),
+      );
+      cycles.value = response;
+    } catch (e) {
+      print('Error fetching cycles: $e');
+    }
+  }
+
   // Méthode corrigée pour l'inscription
   Future<void> register() async {
     try {
-      // Activer le loading
-      isLoading.value = true;
-      
+
+      isRegistered.value = true;
+
+      print(        
+        {
+          'nom': nameController.text,
+          'prenom': surnameController.text,
+          'date_N': selectedDate.value?.toIso8601String(),
+          'lieu_N': birthPlaceController.text,
+          'ville_residence': cityController.text,
+          'email': emailController.text,
+          'name': usernameController.text,
+          'password': passwordController.text,
+          'telephone': phoneController.text,
+          'sexe': genderController.text,
+          'nationalite': nationalityController.text,
+          'classe_id': selectedClasse.value!.id
+        });
+
       final response = await _apiService.post<Map<String, dynamic>>(
         ApiConfig.register,
         {
-          'name': nameController.text,
-          'surname': surnameController.text,
-          'dateOfBirth': selectedDate.value?.toIso8601String(),
-          'birthPlace': birthPlaceController.text,
-          'city': cityController.text,
+          'nom': nameController.text,
+          'prenom': surnameController.text,
+          'date_N': dateOfBirthController.text,
+          'lieu_N': birthPlaceController.text,
+          'ville_residence': cityController.text,
           'email': emailController.text,
-          'username': usernameController.text,
+          'name': usernameController.text,
           'password': passwordController.text,
-          'phone': phoneController.text,
-          'gender': genderController.text,
-          'nationality': nationalityController.text,
-          'academicYear': academicYearController.text,
-          'cycle': selectedCycle.value,
-          'class': selectedClass.value
+          'telephone': phoneController.text,
+          'sexe': genderController.text,
+          'nationalite': nationalityController.text,
+          'classe_id': selectedClasse.value!.id
         },
+
         (data) => data as Map<String, dynamic>,
       );
       
       // Afficher un message de succès
       Get.snackbar(
         'Succès',
-        'Inscription réussie !',
+        response['message'],
         backgroundColor: Colors.green,
         colorText: Colors.white,
         snackPosition: SnackPosition.TOP,
       );
       
       // Rediriger vers la page d'accueil
-      Get.offAllNamed(Routes.HOME_PAGE);
-      
+      Get.offAllNamed(Routes.LOGIN);
+      isRegistered.value = false;
     } catch (e) {
       // Gestion des erreurs
       String errorMessage = 'Une erreur est survenue lors de l\'inscription';
@@ -367,7 +392,7 @@ String? validateAcademicYear(String? value) {
       print('Erreur inscription: $e');
     } finally {
       // Désactiver le loading
-      isLoading.value = false;
+      isRegistered.value = false;
     }
   }
 

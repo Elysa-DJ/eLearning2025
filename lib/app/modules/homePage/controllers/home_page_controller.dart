@@ -96,7 +96,7 @@ class HomePageController extends GetxController {
       try{
         final response = await _apiService.get<User>(ApiConfig.me, (data) => User.fromJson(data['data']));
         _currentUser.value = response;
-        print('Current user: ${_currentUser.value?.toJson()}');
+        print('Current user: ${_currentUser.value!.toJson()}');
         _currentUser.refresh();
       }catch(e){
         Get.snackbar('Error', e.toString());

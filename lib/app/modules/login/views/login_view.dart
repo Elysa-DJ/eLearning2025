@@ -118,7 +118,8 @@ class LoginView extends GetView<LoginController> {
                         controller.login();
                       },
                       text: "se connecter",
-                    ),),
+                    ),
+                    ),
                   
                 
                     SizedBox(height: 30,),

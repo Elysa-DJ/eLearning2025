@@ -1,7 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:learning_app/app/data/models/cycle.dart';
 
+import '../../../../data/models/classe.dart';
+import '../../../widget/gradient_button.dart';
 import '../../controllers/register_controller.dart';
 
 class ConfirmationPage extends StatelessWidget {
@@ -62,8 +65,8 @@ final RegisterController controller;
                     _buildSection(
                       'Études',
                       [
-                        _buildInfoRow('Cycle', controller.selectedCycle.value),
-                        _buildInfoRow('Classe', controller.selectedClass.value),
+                        _buildInfoRowCycle(controller.selectedCycle.value),
+                        _buildInfoRowClasse(controller.selectedClasse.value),
                       ],
                     ),
                     
@@ -169,6 +172,66 @@ final RegisterController controller;
     );
   }
 
+  Widget _buildInfoRowClasse(Classe? value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 120,
+            child: Text(
+              '${value?.libelleCl ?? ""}:',
+              style: const TextStyle(
+                fontWeight: FontWeight.w500,
+                color: Colors.grey,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value?.libelleCl ?? "",
+              style: const TextStyle(
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+
+  Widget _buildInfoRowCycle(Cycle? value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 120,
+            child: Text(
+              '${value?.libelleC??""}:',
+              style: const TextStyle(
+                fontWeight: FontWeight.w500,
+                color: Colors.grey,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value?.libelleC??"",
+              style: const TextStyle(
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+
   Widget _buildInfoRow(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
@@ -198,40 +261,7 @@ final RegisterController controller;
     );
   }
 
-  String _getCycleDisplayName(String cycle) {
-    switch (cycle) {
-      case 'primary':
-        return 'Primaire';
-      case 'college':
-        return 'Collège';
-      case 'highschool':
-        return 'Lycée';
-      case 'university':
-        return 'Université';
-      case 'professional':
-        return 'Formation professionnelle';
-      default:
-        return cycle;
-    }
-  }
 
-  String _getClassDisplayName(String classValue) {
-    Map<String, String> classNames = {
-      'cp': 'CP',
-      'ce1': 'CE1',
-      'ce2': 'CE2',
-      'cm1': 'CM1',
-      'cm2': 'CM2',
-      '6eme': '6ème',
-      '5eme': '5ème',
-      '4eme': '4ème',
-      '3eme': '3ème',
-      'seconde': 'Seconde',
-      'premiere': 'Première',
-      'terminale': 'Terminale',
-    };
-    return classNames[classValue] ?? classValue;
-  }
 
   void _showFinalConfirmationDialog(BuildContext context) {
     showDialog(
@@ -280,7 +310,7 @@ final RegisterController controller;
                     ),
                     SizedBox(height: 4),
                     Text("👤 ${controller.usernameController.text}"),
-                    Text("🎓 ${_getClassDisplayName(controller.selectedClass.value)}"),
+                    Text("🎓 ${controller.selectedClasse.value!.libelleCl}"),
                   ],
                 ),
               ),
@@ -296,108 +326,92 @@ final RegisterController controller;
             ],
           ),
           actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                "Annuler",
-                style: TextStyle(color: Colors.grey[600]),
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                _showSuccessDialog(context);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+            Obx(()=>
+                GradientAuthButton(
+                  isSubmitting: controller.isRegistered.value,
+                  onPressed: () {
+                    controller.register();
+                  },
+                  text: "se connecter",
                 ),
-              ),
-              child: Text(
-                "Confirmer",
-                style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-              ),
-            ),
+                ),
           ],
         );
       },
     );
   }
 
-  void _showSuccessDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 80,
-                height: 80,
-                decoration: BoxDecoration(
-                  color: Colors.green,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.check,
-                  color: Colors.white,
-                  size: 50,
-                ),
-              ),
-              SizedBox(height: 20),
-              Text(
-                "Inscription réussie !",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.green[800],
-                ),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 10),
-              Text(
-                "Bienvenue ${controller.nameController.text} !\nVotre compte a été créé avec succès.",
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey[700],
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-          actions: [
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  // Redirection vers la page d'accueil ou de connexion
-                  // Get.offAllNamed(Routes.LOGIN);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25),
-                  ),
-                ),
-                child: Text(
-                  "Continuer",
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // void _showSuccessDialog(BuildContext context) {
+  //   showDialog(
+  //     context: context,
+  //     barrierDismissible: false,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         shape: RoundedRectangleBorder(
+  //           borderRadius: BorderRadius.circular(20),
+  //         ),
+  //         content: Column(
+  //           mainAxisSize: MainAxisSize.min,
+  //           children: [
+  //             Container(
+  //               width: 80,
+  //               height: 80,
+  //               decoration: BoxDecoration(
+  //                 color: Colors.green,
+  //                 shape: BoxShape.circle,
+  //               ),
+  //               child: Icon(
+  //                 Icons.check,
+  //                 color: Colors.white,
+  //                 size: 50,
+  //               ),
+  //             ),
+  //             SizedBox(height: 20),
+  //             Text(
+  //               "Inscription réussie !",
+  //               style: TextStyle(
+  //                 fontSize: 20,
+  //                 fontWeight: FontWeight.bold,
+  //                 color: Colors.green[800],
+  //               ),
+  //               textAlign: TextAlign.center,
+  //             ),
+  //             SizedBox(height: 10),
+  //             Text(
+  //               "Bienvenue ${controller.nameController.text} !\nVotre compte a été créé avec succès.",
+  //               style: TextStyle(
+  //                 fontSize: 16,
+  //                 color: Colors.grey[700],
+  //               ),
+  //               textAlign: TextAlign.center,
+  //             ),
+  //           ],
+  //         ),
+  //         actions: [
+  //           Center(
+  //             child: ElevatedButton(
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //                 // Redirection vers la page d'accueil ou de connexion
+  //                 // Get.offAllNamed(Routes.LOGIN);
+  //               },
+  //               style: ElevatedButton.styleFrom(
+  //                 backgroundColor: Colors.blue,
+  //                 padding: EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+  //                 shape: RoundedRectangleBorder(
+  //                   borderRadius: BorderRadius.circular(25),
+  //                 ),
+  //               ),
+  //               child: Text(
+  //                 "Continuer",
+  //                 style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+  //               ),
+  //             ),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
 }

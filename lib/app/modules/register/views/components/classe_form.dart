@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:learning_app/app/data/models/classe.dart';
 import '../../controllers/register_controller.dart';
 
 class ClassForm extends StatelessWidget {
@@ -23,9 +24,8 @@ class ClassForm extends StatelessWidget {
         SizedBox(height: 20),
         Expanded(
           child: Obx(() {
-            List<Map<String, String>> classes = _getClassesForCycle(controller.selectedCycle.value);
-            
-            if (classes.isEmpty) {
+
+            if (controller.selectedCycle.value == null || controller.selectedCycle.value!.classes.isEmpty) {
               return Center(
                 child: Text(
                   "Veuillez d'abord sélectionner un cycle",
@@ -35,10 +35,10 @@ class ClassForm extends StatelessWidget {
             }
             
             return ListView.separated(
-              itemCount: classes.length,
+              itemCount: controller.selectedCycle.value!.classes.length,
               separatorBuilder: (context, index) => SizedBox(height: 12),
               itemBuilder: (context, index) {
-                return _buildClassOption(classes[index]['title']!, classes[index]['value']!);
+                return _buildClassOption(controller.selectedCycle.value!.classes[index]);
               },
             );
           }),
@@ -54,7 +54,7 @@ class ClassForm extends StatelessWidget {
               child: Text("Précédent", style: TextStyle(color: Colors.grey[600])),
             ),
             Obx(() => ElevatedButton(
-              onPressed: controller.selectedClass.value.isNotEmpty 
+              onPressed: controller.selectedClasse.value != null 
                   ? () => controller.nextStep()
                   : null,
               style: ElevatedButton.styleFrom(
@@ -73,44 +73,44 @@ class ClassForm extends StatelessWidget {
     );
   }
 
-  Widget _buildClassOption(String title, String value) {
+  Widget _buildClassOption(Classe classe) {
     return Obx(() => GestureDetector(
       onTap: () {
-        controller.selectedClass.value = value;
+        controller.selectedClasse.value = classe;
       },
       child: Container(
         padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
           border: Border.all(
-            color: controller.selectedClass.value == value 
+            color: controller.selectedClasse.value == classe 
                 ? Colors.blue 
                 : Colors.grey[300]!,
             width: 2,
           ),
           borderRadius: BorderRadius.circular(12),
-          color: controller.selectedClass.value == value 
+          color: controller.selectedClasse.value == classe 
               ? Colors.blue.withOpacity(0.1) 
               : Colors.white,
         ),
         child: Row(
           children: [
             Icon(
-              controller.selectedClass.value == value 
+              controller.selectedClasse.value == classe 
                   ? Icons.radio_button_checked 
                   : Icons.radio_button_unchecked,
-              color: controller.selectedClass.value == value 
+              color: controller.selectedClasse.value == classe 
                   ? Colors.blue 
                   : Colors.grey[400],
             ),
             SizedBox(width: 12),
             Text(
-              title,
+              classe.libelleCl,
               style: TextStyle(
                 fontSize: 16,
-                fontWeight: controller.selectedClass.value == value 
+                fontWeight: controller.selectedClasse.value == classe 
                     ? FontWeight.w600 
                     : FontWeight.normal,
-                color: controller.selectedClass.value == value 
+                color: controller.selectedClasse.value == classe 
                     ? Colors.blue[800] 
                     : Colors.grey[700],
               ),
@@ -121,32 +121,6 @@ class ClassForm extends StatelessWidget {
     ));
   }
 
-  List<Map<String, String>> _getClassesForCycle(String cycle) {
-    switch (cycle) {
-      case 'primary':
-        return [
-          {'id': '1', 'title': 'CP', 'value': 'cp'},
-          {'id': '2', 'title': 'CE1', 'value': 'ce1'},
-          {'id': '3', 'title': 'CE2', 'value': 'ce2'},
-          {'id': '4', 'title': 'CM1', 'value': 'cm1'},
-          {'id': '5', 'title': 'CM2', 'value': 'cm2'},
-        ];
-      case 'college':
-        return [
-          {'id': '6', 'title': '6ème', 'value': '6eme'},
-          {'id': '7', 'title': '5ème', 'value': '5eme'},
-          {'id': '8', 'title': '4ème', 'value': '4eme'},
-          {'id': '9', 'title': '3ème', 'value': '3eme'},
-        ];
-      case 'highschool':
-        return [
-          {'id': '10', 'title': 'Seconde', 'value': 'seconde'},
-          {'id': '11', 'title': 'Première', 'value': 'premiere'},
-          {'id': '12', 'title': 'Terminale', 'value': 'terminale'},
-        ];
-      default:
-        return [];
-    }
-  }
+
   
 }

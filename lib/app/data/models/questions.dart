@@ -35,7 +35,7 @@ class Question {
     );
   }
 
-  toJson() {
+  Map<String, dynamic>toJson() {
     return {
       'id': id,
       'text': text,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:learning_app/app/data/services/mock_service.dart';
 import '../../controllers/register_controller.dart';
 
 class PersonalInfoForm extends StatelessWidget {
@@ -57,20 +58,22 @@ Widget build(BuildContext context) {
               icon: Icons.flag,
               hintText: "Nationality",
               value: controller.selectedNationality.value,
-              items: controller.africanCountries,
+              items: MockService.africanCountries,
               onChanged: (val) => controller.nationalityController.text = val??"",
               validator: controller.validateNationality,
             ),
-            SizedBox(height: 10),
-            _buildDropdownField(
-              context: context, // Ajoutez cette ligne
-              icon: Icons.school,
-              hintText: "School Year",
-              value: controller.selectedAcademicYear.value,
-              items: controller.academicYears,
-              onChanged: (val) => controller.academicYearController.text = val??"",
-              validator: controller.validateAcademicYear,
-            ),
+            // SizedBox(height: 10),
+            // _buildDropdownField(
+            //   context: context, // Ajoutez cette ligne
+            //   icon: Icons.school,
+            //   hintText: "School Year",
+            //   value: controller.selectedAcademicYear.value,
+            //   items: MockService.academicYears,
+            //   onChanged: (val) => controller.academicYearController.text = val??"",
+            //   validator: controller.validateAcademicYear,
+            // ),
+
+            
             SizedBox(height: 10),
             _buildTextField(
               Icons.location_on,

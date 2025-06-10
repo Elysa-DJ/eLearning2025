@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../../data/models/cycle.dart';
 import '../../controllers/register_controller.dart';
 
 class CycleForm extends StatelessWidget {
@@ -24,11 +25,7 @@ class CycleForm extends StatelessWidget {
         Expanded(
           child: ListView(
             children: [
-              _buildCycleOption("Primaire", "primary"),
-              SizedBox(height: 15),
-              _buildCycleOption("Collège", "college"),
-              SizedBox(height: 15),
-              _buildCycleOption("Lycée", "highschool"),
+              ... controller.cycles.value.map<Widget>((cycle) => _buildCycleOption(cycle)),
             ],
           ),
         ),
@@ -43,7 +40,7 @@ class CycleForm extends StatelessWidget {
               child: Text("Précédent", style: TextStyle(color: Colors.grey[600])),
             ),
             Obx(() => ElevatedButton(
-              onPressed: controller.selectedCycle.value.isNotEmpty 
+              onPressed: controller.selectedCycle.value!=null 
                   ? () => controller.nextStep()
                   : null,
               style: ElevatedButton.styleFrom(
@@ -62,13 +59,14 @@ class CycleForm extends StatelessWidget {
     );
   }
 
-  Widget _buildCycleOption(String title, String value) {
+  Widget _buildCycleOption(Cycle value) {
     return Obx(() => GestureDetector(
       onTap: () {
         controller.selectedCycle.value = value;
-        controller.selectedClass.value = ""; // Reset class when cycle changes
+        controller.selectedClasse.value = null; // Reset class when cycle changes
       },
       child: Container(
+        margin: EdgeInsets.only(bottom: 12),
         padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
           border: Border.all(
@@ -94,7 +92,7 @@ class CycleForm extends StatelessWidget {
             ),
             SizedBox(width: 12),
             Text(
-              title,
+              value.libelleC,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: controller.selectedCycle.value == value 

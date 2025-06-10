@@ -89,6 +89,7 @@ class RegisterView extends GetView<RegisterController> {
                                 color: Colors.blue[800],
                               ),
                             ),
+                            
                             Flexible(
                               child: Obx(() => StepIndicator(
                                     currentStep: controller.currentStep.value,
