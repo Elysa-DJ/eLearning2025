@@ -69,6 +69,7 @@ class ProfileView extends GetView<ProfileController> {
 
   Widget _buildHeader() {
   return Obx(() {
+    final info = controller.info.value;
     final user = controller.user.value;
 
     return Container(
@@ -86,7 +87,7 @@ class ProfileView extends GetView<ProfileController> {
 
           /// 👇 Si `user` est null, affiche "Chargement..."
           Text(
-            user?.name ?? 'Chargement...',
+            info?.nom ??'Chargement...',
             style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700, color: Color(0xFF1F2937)),
           ),
 

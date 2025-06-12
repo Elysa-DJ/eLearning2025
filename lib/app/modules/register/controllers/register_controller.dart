@@ -335,6 +335,7 @@ String? validateAcademicYear(String? value) {
           'telephone': phoneController.text,
           'sexe': genderController.text,
           'nationalite': nationalityController.text,
+          'cycle_id': selectedCycle.value!.id,
           'classe_id': selectedClasse.value!.id
         });
 
@@ -352,6 +353,7 @@ String? validateAcademicYear(String? value) {
           'telephone': phoneController.text,
           'sexe': genderController.text,
           'nationalite': nationalityController.text,
+          'cycle_id': selectedCycle.value!.id,
           'classe_id': selectedClasse.value!.id
         },
 
