@@ -69,20 +69,14 @@ class RegisterView extends GetView<RegisterController> {
                         onTap: () {
                           Get.toNamed(Routes.LOGIN);
                         },
-                        child: Row(
-                          children: [
-                            Icon(Icons.arrow_back, color: Colors.blue),
-                            SizedBox(width: 5),
-                            Text("Back to Login", style: TextStyle(color: Colors.blue)),
-                          ],
-                        ),
+                        
                       ),
                       SizedBox(height: 20),
                       Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "Sign Up",
+                              "Inscrivez-vous sur Emonaya Learn",
                               style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,

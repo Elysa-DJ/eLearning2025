@@ -2,36 +2,37 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-// import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
-// import 'package:file_picker/file_picker.dart';
-// import 'package:path_provider/path_provider.dart';
-// import 'package:http/http.dart' as http;
 
+import '../../../core/config/api_config.dart';
 import '../../../data/models/course.dart';
+import '../../../data/models/inscription.dart';
+import '../../../data/services/api_service.dart';
 
 class CourseDetailsController extends GetxController {
-  // final pdfPath = Rx<String?>(null);
-  // final pdfUrl = Rx<String?>(null);
-  // final isLoadingPdf = false.obs;
-  // final urlPdfController = TextEditingController();
-  // final pdfViewerKey = GlobalKey<SfPdfViewerState>();
-   final Course course;
-  final isEnrolling = false.obs;
-  final isEnrolled = false.obs;
 
-  CourseDetailsController({required this.course});
-  //  void onClose() {
-  //   urlPdfController.dispose();
-  //   super.onClose();
-  // }
+    final Rx<Cours> _cours = Get.arguments['cours'];
+    
+    final isEnrolling = false.obs;
+    final isEnrolled = false.obs;
+    final _apiService = Get.find<ApiService>();
+    
+    Cours get cours => _cours.value; 
 
-  Future<void> enrollInCourse() async {
+  
+  @override
+  void onInit() async{
+    super.onInit();
+    fetchInscription();
+    
+  }
+  Future<void> enrollInCourse(coursID) async {
     try {
       isEnrolling.value = true;
       
-      // Simulate API call
-      await Future.delayed(const Duration(seconds: 1));
-      
+      final response = _apiService.post(ApiConfig.toggleEnrollment,{
+        'cours_id':coursID
+      }, (data)=>data);
+
       isEnrolled.value = true;
       Get.snackbar(
         'Succès',
@@ -43,7 +44,7 @@ class CourseDetailsController extends GetxController {
       Get.snackbar(
         'Erreur',
         'Une erreur est survenue lors de l\'inscription',
-        backgroundColor: Colors.red,
+        backgroundColor: const Color.fromARGB(255, 49, 7, 4),
         colorText: Colors.white,
       );
     } finally {
@@ -57,7 +58,7 @@ class CourseDetailsController extends GetxController {
     Get.snackbar(
       'Désinscription',
       'Vous vous êtes désinscrit du cours',
-      backgroundColor: Colors.red,
+      backgroundColor: const Color.fromARGB(255, 42, 7, 5),
       colorText: Colors.white,
     );
   }
@@ -81,74 +82,27 @@ class CourseDetailsController extends GetxController {
     return '${hours}h ${remainingMinutes}min';
   }
 
-  // Méthodes pour le PDF
-  // Future<void> pickPDFFile() async {
-  //   try {
-  //     FilePickerResult? result = await FilePicker.platform.pickFiles(
-  //       type: FileType.custom,
-  //       allowedExtensions: ['pdf'],
-  //     );
+  Future<void> fetchInscription() async {
+    try {
+      // Récupère l'inscription
+    final inscription = await _apiService.get<Inscription>(
+      ApiConfig.fetchInscription,
+      (data) => Inscription.fromJson(data['data']),
+    );
 
-  //     if (result != null) {
-  //       pdfPath.value = result.files.single.path;
-  //       pdfUrl.value = null;
-  //     }
-  //   } catch (e) {
-  //     _showErrorDialog('Erreur lors de la sélection du fichier: $e');
-  //   }
-  // }
+    // Ensuite, on récupère le cours à partir de son ID
+    // final cours = await _apiService.get<Cours>(
+    //   '${ApiConfig.fetchCours}/${inscription.coursId}',
+    //   (data) => Cours.fromJson(data['data']),
+    // );
 
-  // Future<void> loadPDFFromUrl() async {
-  //   if (urlPdfController.text.isEmpty) {
-  //     _showErrorDialog('Veuillez entrer une URL valide');
-  //     return;
-  //   }
+    _cours.value = cours;
+    } catch (e) {
+      print('Error fetching inscription: $e');
+    }
+  }
 
-  //   final url = urlPdfController.text.trim();
-  //   if (!url.toLowerCase().endsWith('.pdf')) {
-  //     _showErrorDialog("L'URL doit pointer vers un fichier PDF");
-  //     return;
-  //   }
-
-  //   isLoadingPdf.value = true;
-
-  //   try {
-  //     final response = await http.get(Uri.parse(url));
-      
-  //     if (response.statusCode == 200) {
-  //       final appDir = await getTemporaryDirectory();
-  //       final file = File('${appDir.path}/downloaded.pdf');
-  //       await file.writeAsBytes(response.bodyBytes);
-        
-  //       pdfPath.value = file.path;
-  //       pdfUrl.value = url;
-  //       isLoadingPdf.value = false;
-  //     } else {
-  //       isLoadingPdf.value = false;
-  //       _showErrorDialog('Impossible de télécharger le PDF: ${response.statusCode}');
-  //     }
-  //   } catch (e) {
-  //     isLoadingPdf.value = false;
-  //     _showErrorDialog('Erreur lors du téléchargement: $e');
-  //   }
-  // }
-
-  // // void reloadPdf() {
-  // //   pdfViewerKey.currentState?.reload();
-  // // }
-
-  // void _showErrorDialog(String message) {
-  //   Get.dialog(
-  //     AlertDialog(
-  //       title: const Text('Erreur'),
-  //       content: Text(message),
-  //       actions: [
-  //         TextButton(
-  //           onPressed: () => Get.back(),
-  //           child: const Text('OK'),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
+  
+  
 }
+

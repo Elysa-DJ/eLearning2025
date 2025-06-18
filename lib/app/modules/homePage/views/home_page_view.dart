@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/home_page_controller.dart';
-import '../../../data/models/category.dart';
 import '../../widget/category_chip.dart';
 import '../../widget/course_card.dart';
 import '../../widget/custom_drawer.dart';
@@ -90,19 +89,26 @@ class HomePageView extends GetView<HomePageController> {
                   const SizedBox(height: 12),
                   
                   SizedBox(
-                    height: 40,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: CategoryList().categoriesList.length,
-                      itemBuilder: (context, index) {
-                        final category = CategoryList().categoriesList[index];
-                        return CategoryChip(
-                          label: category["label"],
-                          color: category["color"],
+                      height: 40,
+                      child: Obx(() {
+                        final categories = controller.categories.value;
+                        if (categories.isEmpty) {
+                          return const Center(child: Text('Aucune catégorie'));
+                        }
+                        return ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: categories.length,
+                          itemBuilder: (context, index) {
+                            final category = categories[index];
+                            return CategoryChip(
+                              label: category.libelleCat,
+                              index: index,
+                            );
+                          },
                         );
-                      },
+                      }),
                     ),
-                  ),
+
                   
                   const SizedBox(height: 24),
                   
@@ -122,12 +128,9 @@ class HomePageView extends GetView<HomePageController> {
                       scrollDirection: Axis.horizontal,
                       itemCount: controller.latestCourses.length,
                       itemBuilder: (context, index) {
-                        final course = controller.latestCourses[index];
                         return CourseCard(
-                          title: course.titre,
-                          imageUrl: course.imageUrl ?? "",
-                          rating: course.rating ?? 0.0,
-                          courseId: course.idCours,
+                          controller: controller,
+                          cours: controller.latestCourses[index],
                         );
                       },
                     ),
@@ -153,10 +156,8 @@ class HomePageView extends GetView<HomePageController> {
                       itemBuilder: (context, index) {
                         final course = controller.popularCourses[index];
                         return CourseCard(
-                          title: course.titre,
-                          imageUrl: course.imageUrl ?? "",
-                          rating: course.rating ?? 0.0,
-                          courseId: course.idCours,
+                          controller: controller,
+                          cours: controller.popularCourses[index],
                         );
                       },
                     ),

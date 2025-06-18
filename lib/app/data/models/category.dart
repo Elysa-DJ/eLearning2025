@@ -1,9 +1,32 @@
-class CategoryList {
-  final List<Map<String, dynamic>> categoriesList = [
-    {"label": "Tous", "color": 0xFF007AFF},
-    {"label": "Développement", "color": 0xFF34C759},
-    {"label": "Design", "color": 0xFFFF2D55},
-    {"label": "Business", "color": 0xFF5856D6},
-    {"label": "Marketing", "color": 0xFFFF9500},
-  ];
+class Category {
+  final int id;
+  final String libelleCat;
+
+  Category({
+    required this.id,
+    required this.libelleCat,
+  });
+
+  factory Category.fromJson(Map<String, dynamic> json) {
+    return Category(
+      id: json['id'] ?? 0,
+      libelleCat: json['libelle_cat'] ?? ''
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'libelleCat': libelleCat,
+    };
+  }
+
+   static List<Category> fromArrayJson(List<dynamic>jsonList){
+    // ignore: unnecessary_cast
+    return jsonList.map((e)=>Category.fromJson(e)).toList();
+ }
+
+static List<Map<String,dynamic>> toArrayJson(List<Category>jsonList){
+    return jsonList.map((e)=>e.toJson()).toList();
+ }
 }

@@ -1,187 +1,158 @@
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../data/models/course.dart';
-import '../../widget/pdf_viewer_wigdet.dart';
-import '../../widget/video_player_widget.dart';
-import '../controllers/course_details_controller.dart';
 
-class CourseDetailsView extends GetView<CourseDetailsController> {
-  final Course course;
+import '../../data/models/course.dart';
+import 'pdf_viewer_wigdet.dart';
+import 'video_player_widget.dart';
 
-  const CourseDetailsView({
-    super.key,
-    required this.course,
-  });
+class CoursDetail extends StatelessWidget {
+  final Cours cours;
+  final controller;
+  const CoursDetail({super.key, required this.cours,required  this.controller});
 
   @override
-  Widget build(BuildContext context) {
-    return Placeholder();
-    // return Scaffold(
-    //   body: CustomScrollView(
-    //     slivers: [
-    //       SliverAppBar(
-    //         expandedHeight: 250,
-    //         pinned: true,
-    //         flexibleSpace: FlexibleSpaceBar(
-    //           background: Image.network(
-    //             course.imageUrl ?? '',
-    //             fit: BoxFit.cover,
-    //           ),
-    //         ),
-    //         leading: IconButton(
-    //           icon: Container(
-    //             padding: const EdgeInsets.all(8),
-    //             decoration: BoxDecoration(
-    //               color: Colors.black.withOpacity(0.4),
-    //               shape: BoxShape.circle,
-    //             ),
-    //             child: const Icon(Icons.arrow_back, color: Colors.white),
-    //           ),
-    //           onPressed: () => Get.back(),
-    //         ),
-    //       ),
-    //       SliverToBoxAdapter(
-    //         child: Container(
-    //           padding: const EdgeInsets.all(20),
-    //           child: Column(
-    //             crossAxisAlignment: CrossAxisAlignment.start,
-    //             children: [
-    //               Text(
-    //                 course.titre,
-    //                 style: const TextStyle(
-    //                   fontSize: 24,
-    //                   fontWeight: FontWeight.bold,
-    //                 ),
-    //               ),
-    //               const SizedBox(height: 12),
-    //               Wrap(
-    //                 spacing: 8,
-    //                 runSpacing: 8,
-    //                 children: course.categories.map((category) =>
-    //                     Chip(
-    //                       label: Text(category),
-    //                       backgroundColor: Colors.blue.shade100,
-    //                     )
-    //                 ).toList(),
-    //               ),
-    //               const SizedBox(height: 12),
-    //               Row(
-    //                 children: [
-    //                   const Icon(Icons.star, color: Colors.amber, size: 20),
-    //                   const SizedBox(width: 4),
-    //                   Text(
-    //                     '${course.rating?.toStringAsFixed(1) ?? "0.0"}',
-    //                     style: const TextStyle(
-    //                       fontSize: 16,
-    //                       fontWeight: FontWeight.w500,
-    //                     ),
-    //                   ),
-    //                   const SizedBox(width: 16),
-    //                   Icon(Icons.people, color: Colors.grey[600], size: 20),
-    //                   const SizedBox(width: 4),
-    //                   Text(
-    //                     '${course.students ?? 0} étudiants',
-    //                     style: TextStyle(
-    //                       fontSize: 16,
-    //                       color: Colors.grey[600],
-    //                     ),
-    //                   ),
-    //                 ],
-    //               ),
-    //               const SizedBox(height: 24),
-    //               Row(
-    //                 children: [
-    //                   Expanded(
-    //                     child: _buildInfoCard(
-    //                       icon: Icons.timer,
-    //                       title: 'Durée',
-    //                       value: controller.formatDuration(course.duration),
-    //                     ),
-    //                   ),
-    //                   const SizedBox(width: 16),
-    //                   Expanded(
-    //                     child: _buildInfoCard(
-    //                       icon: Icons.euro,
-    //                       title: 'Prix',
-    //                       value: '${course.price?.toStringAsFixed(2) ?? "0.00"}€',
-    //                     ),
-    //                   ),
-    //                 ],
-    //               ),
-    //               const SizedBox(height: 24),
-    //               const Text(
-    //                 'Description du cours',
-    //                 style: TextStyle(
-    //                   fontSize: 20,
-    //                   fontWeight: FontWeight.bold,
-    //                 ),
-    //               ),
-    //               const SizedBox(height: 12),
-    //               Text(
-    //                 course.description ?? 'Aucune description disponible.',
-    //                 style: TextStyle(
-    //                   fontSize: 16,
-    //                   color: Colors.grey[700],
-    //                   height: 1.5,
-    //                 ),
-    //               ),
-    //               const SizedBox(height: 24),
-    //               const Text(
-    //                 'Contenu du cours',
-    //                 style: TextStyle(
-    //                   fontSize: 20,
-    //                   fontWeight: FontWeight.bold,
-    //                 ),
-    //               ),
-    //               const SizedBox(height: 12),
-    //               _buildChaptersList(),
-    //             ],
-    //           ),
-    //         ),
-    //       ),
-    //     ],
-    //   ),
-    //   bottomNavigationBar: Container(
-    //     padding: const EdgeInsets.all(16),
-    //     decoration: BoxDecoration(
-    //       color: Colors.white,
-    //       boxShadow: [
-    //         BoxShadow(
-    //           color: Colors.black.withOpacity(0.1),
-    //           blurRadius: 10,
-    //           offset: const Offset(0, -5),
-    //         ),
-    //       ],
-    //     ),
-    //     child: Obx(() => ElevatedButton(
-    //           onPressed: controller.isEnrolling.value
-    //               ? null
-    //               : controller.isEnrolled.value
-    //                   ? controller.unenrollFromCourse
-    //                   : controller.enrollInCourse,
-    //           style: ElevatedButton.styleFrom(
-    //             backgroundColor:
-    //                 controller.isEnrolled.value ? Colors.red : Colors.blue,
-    //             padding: const EdgeInsets.symmetric(vertical: 16),
-    //             shape: RoundedRectangleBorder(
-    //               borderRadius: BorderRadius.circular(12),
-    //             ),
-    //           ),
-    //           child: controller.isEnrolling.value
-    //               ? const CircularProgressIndicator(color: Colors.white)
-    //               : Text(
-    //                   controller.isEnrolled.value
-    //                       ? "Se désinscrire"
-    //                       : "S'inscrire au cours",
-    //                   style: const TextStyle(
-    //                     fontSize: 16,
-    //                     fontWeight: FontWeight.bold,
-    //                     color: Colors.white,
-    //                   ),
-    //                 ),
-    //         )),
-    //   ),
-    // );
+   Widget build(BuildContext context) {
+
+    return Scaffold(
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            expandedHeight: 250,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              background: Image.network(
+                cours.imageUrl ?? '',
+                fit: BoxFit.cover,
+              ),
+            ),
+            leading: IconButton(
+              icon: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.4),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.arrow_back, color: Colors.white),
+              ),
+              onPressed: () => Get.back(),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    cours.titre,
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: cours.categories.map((category) =>
+                        Chip(
+                          label: Text(category.libelleCat),
+                          backgroundColor: Colors.blue.shade100,
+                        )
+                    ).toList(),
+                  ),
+                  const SizedBox(height: 12),
+                 
+                  const SizedBox(height: 24),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildInfoCard(
+                          icon: Icons.timer,
+                          title: 'Durée',
+                          value: cours.duration.toString(),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  const Text(
+                    'Description du cours',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    cours.description ?? 'Aucune description disponible.',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey[700],
+                      height: 1.5,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  const Text(
+                    'Contenu du cours',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  _buildChaptersList(),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 10,
+              offset: const Offset(0, -5),
+            ),
+          ],
+        ),
+        child: Obx(()=> ElevatedButton(
+              onPressed: controller.isEnrolling.value
+                  ? null
+                  : controller.isEnrolled.value
+                      ? ()=> controller.unenrollFromCourse
+                      : ()async => await controller.enrollInCourse(1),
+              style: ElevatedButton.styleFrom(
+                backgroundColor:
+                    controller.isEnrolled.value ? Colors.red : Colors.blue,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: controller.isEnrolling.value
+                  ? const CircularProgressIndicator(color: Colors.white)
+                  : Text(
+                      controller.isEnrolled.value
+                          ? "Se désinscrire"
+                          : "S'inscrire au cours",
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+            ),
+      ),
+      )
+    );
   }
 
   Widget _buildInfoCard({
@@ -217,7 +188,7 @@ class CourseDetailsView extends GetView<CourseDetailsController> {
   }
 
   Widget _buildChaptersList() {
-    final chapters = course.chapters;
+    final chapters = cours.chapters;
     if (chapters == null || chapters.isEmpty) {
       return const Text(
         'Aucun chapitre disponible.',
@@ -393,7 +364,7 @@ class CourseDetailsView extends GetView<CourseDetailsController> {
                                                           videoUrl:
                                                               section.videoUrl!,
                                                           thumbnailUrl:
-                                                              course.imageUrl,
+                                                              cours.imageUrl,
                                                         ),
                                                       ),
                                                     ],
@@ -424,10 +395,7 @@ class CourseDetailsView extends GetView<CourseDetailsController> {
                             const SizedBox(height: 16),
                             ElevatedButton.icon(
                               onPressed: () {
-                                Get.toNamed('/evaluation', parameters: {
-                                  'courseId': course.idCours,
-                                  'chapterId': chapter.id,
-                                });
+
                               },
                               icon: const Icon(Icons.assignment_turned_in),
                               label: const Text("Évaluation du chapitre"),

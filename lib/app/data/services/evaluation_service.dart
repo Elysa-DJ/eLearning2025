@@ -11,36 +11,40 @@ class EvaluationService {
       id: 'eval101',
       courseId: courseId,
       chapterId: chapterId,
-      title: 'Chapter Evaluation',
+      title: 'Évaluation du Chapitre ',
       description: 'Test your understanding of the concepts covered in this chapter.',
       totalQuestions: 10,
       timeLimit: 15,
       passingScore: 70,
       maxAttempts: 3,
       instructions: [
-        'Read each question carefully before answering.',
-        'You can change your answers before submitting the quiz.',
-        'Some questions may have multiple correct answers.',
+        'Lisez attentivement chaque question avant de répondre.',
+        'Vous pouvez modifier vos réponses avant de soumettre le quiz.',
+        'Certaines questions peuvent avoir plusieurs bonnes réponses.',
         'You have 15 minutes to complete this quiz.',
-        'You need 70% to pass this evaluation.'
+        'Vous devez obtenir 70% pour réussir cette évaluation.'
       ],
       questionTypes: [
-        QuestionType(
-          name: 'Multiple Choice',
-          description: 'Select one correct answer from the given options.',
-        ),
-        QuestionType(
-          name: 'Multiple Select',
-          description: 'Select all correct answers from the given options.',
-        ),
-        QuestionType(
-          name: 'Text Answer',
-          description: 'Type your answer in the provided text field.',
-        ),
-        QuestionType(
-          name: 'Calculation',
-          description: 'Solve the given problem and enter the numerical answer.',
-        ),
+         QuestionType(
+        name: 'Choix Multiple',
+        description: 'Sélectionnez une réponse correcte parmi les options données.',
+      ),
+      QuestionType(
+        name: 'Sélection Multiple',
+        description: 'Sélectionnez toutes les réponses correctes parmi les options données.',
+      ),
+      QuestionType(
+        name: 'Réponse Textuelle',
+        description: 'Tapez votre réponse dans le champ de texte fourni.',
+      ),
+      QuestionType(
+        name: 'Vrai/Faux',
+        description: 'Déterminez si l\'énoncé est vrai ou faux.',
+      ),
+      QuestionType(
+        name: 'Calcul',
+        description: 'Résolvez le problème donné et entrez la réponse numérique.',
+      ),
       ],
       previousAttempts: [
         PreviousAttempt(

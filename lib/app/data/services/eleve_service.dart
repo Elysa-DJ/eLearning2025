@@ -8,7 +8,7 @@ import '../../core/config/api_config.dart';
 
 class EleveService extends GetxService {
 
-  late final Eleve? _eleve;
+  Eleve? _eleve;
   final ApiService _apiService = Get.find<ApiService>();
   Eleve? get eleve => _eleve;
 

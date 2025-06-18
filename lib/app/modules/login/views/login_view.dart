@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
-
 
 import '../../onboarding2/views/onboarding2_view.dart';
 import '../../widget/gradient_button.dart';
@@ -9,30 +7,38 @@ import '../controllers/login_controller.dart';
 
 class LoginView extends GetView<LoginController> {
   const LoginView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false, // important !
       body: Stack(
         children: [
-        Container(
-        height: double.infinity,
-        width: double.infinity,
-        decoration: BoxDecoration(
-        gradient: LinearGradient(colors:[ Color(0xFF03A9F4), Color(0xff281537)]
-        )
-        ),
-        child: Padding(
-          padding: const EdgeInsets.only(top: 60.0, left:22 ),
-          child: Text('Bonjour!\n Bienvenu sur notre application de soutien scolaire',
-          style: TextStyle(
-            fontSize: 30,
-            color: Colors.white,
-            fontWeight: FontWeight.bold
+          // Fond dégradé bleu
+          Container(
+            height: double.infinity,
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xFF03A9F4), Color(0xff281537)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+            child: const Padding(
+              padding: EdgeInsets.only(top: 60.0, left: 22),
+              child: Text(
+                'Bienvenue sur Emonaya Learn',
+                style: TextStyle(
+                  fontSize: 30,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ),
-        )
-      ),
-       // Bouton retour
+
+          // Bouton retour
           Positioned(
             top: 10,
             left: 10,
@@ -41,36 +47,36 @@ class LoginView extends GetView<LoginController> {
               onPressed: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => Onboarding2View()), // Retour à l'onboarding
+                  MaterialPageRoute(builder: (context) => Onboarding2View()),
                 );
               },
             ),
           ),
 
-      Padding(
-        padding: const EdgeInsets.only(top: 250.0, ),
-        child: Container(
-
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(40.0),
-              topRight: Radius.circular(40.0),
-            ),
-            color: Colors.white,
-            
-          ),
-            
-            height: double.infinity,
-            width: double.infinity,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 18.0, right:18),
-              
-              child: Form(
-                key: controller.formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextFormField(
+          // Container Formulaire avec scroll
+          Positioned(
+            top: 250,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(40),
+                  topRight: Radius.circular(40),
+                ),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+              child: SingleChildScrollView(
+                // rend scrollable quand clavier apparaît
+                padding: const EdgeInsets.only(bottom: 30),
+                child: Form(
+                  key: controller.formKey,
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 30),
+                      TextFormField(
                         controller: controller.nameController,
                         validator: controller.validateName,
                         decoration: InputDecoration(
@@ -82,9 +88,8 @@ class LoginView extends GetView<LoginController> {
                           ),
                         ),
                       ),
-                       SizedBox(height: 20,),
-                
-                     TextFormField(
+                      const SizedBox(height: 20),
+                      TextFormField(
                         obscureText: true,
                         controller: controller.passwordController,
                         validator: controller.validatePassword,
@@ -97,32 +102,26 @@ class LoginView extends GetView<LoginController> {
                           ),
                         ),
                       ),
-                    SizedBox(height: 20,),
-                
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: TextButton(
+                      const SizedBox(height: 20),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: TextButton(
                           onPressed: () {},
                           child: const Text(
-                            "Mot de passe oublie?",
+                            "Mot de passe oublié ?",
                             style: TextStyle(color: Colors.blue),
                           ),
                         ),
-                    ), 
-                
-                    SizedBox(height: 30,),
-                    Obx(()=>
-                    GradientAuthButton(
-                      isSubmitting: controller.isSubmitting.value,
-                      onPressed: () {
-                        controller.login();
-                      },
-                      text: "se connecter",
-                    ),
-                    ),
-                  
-                
-                    SizedBox(height: 30,),
+                      ),
+                      const SizedBox(height: 30),
+                      Obx(() => GradientAuthButton(
+                            isSubmitting: controller.isSubmitting.value,
+                            onPressed: () {
+                              controller.login();
+                            },
+                            text: "Se connecter",
+                          )),
+                      const SizedBox(height: 30),
                       const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -133,23 +132,22 @@ class LoginView extends GetView<LoginController> {
                           SocialIcon(iconPath: "assets/apple.png"),
                         ],
                       ),
-                
-                  ],
+                      const SizedBox(height: 30),
+                    ],
+                  ),
                 ),
               ),
             ),
-            
-            ),
-      )
-        
+          ),
         ],
-      )
+      ),
     );
   }
 }
+
 class SocialIcon extends StatelessWidget {
   final String iconPath;
-  const SocialIcon({required this.iconPath});
+  const SocialIcon({required this.iconPath, super.key});
 
   @override
   Widget build(BuildContext context) {

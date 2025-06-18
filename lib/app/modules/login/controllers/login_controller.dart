@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:learning_app/app/data/services/api_service.dart';
+import 'package:learning_app/app/data/services/eleve_service.dart';
 import 'package:learning_app/app/routes/app_pages.dart';
 
 class LoginController extends GetxController {
@@ -59,6 +60,7 @@ class LoginController extends GetxController {
       print('name: ${nameController.text}');
       print('password: ${passwordController.text}');
       await _apiService.login(nameController.text, passwordController.text);
+      await Get.putAsync<EleveService>(()=>EleveService().init());
       Get.offAllNamed(Routes.HOME_PAGE);
     }catch(e){
       Get.snackbar('Error', e.toString());

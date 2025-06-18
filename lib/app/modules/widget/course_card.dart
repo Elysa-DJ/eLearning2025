@@ -1,22 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:learning_app/app/modules/widget/cours_details.dart';
 
 import '../../data/models/course.dart';
-import '../course_details/views/course_details_view.dart';
+
 
 class CourseCard extends StatelessWidget {
-  final String title;
-  final String imageUrl;
-  final double rating;
-  final String courseId;
+  final Cours cours;
+  final controller;
   final VoidCallback? onTap;
 
   const CourseCard({
     super.key,
-    required this.title,
-    required this.imageUrl,
-    required this.rating,
-    required this.courseId,
+    required this.cours,
+    required this.controller,
     this.onTap,
   });
 
@@ -25,55 +21,14 @@ class CourseCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         // Create a sample course for demonstration
-        final course = Course(
-          idCours: courseId,
-          titre: title,
-          imageUrl: imageUrl,
-          rating: rating,
-          description: 'Ce cours vous apprendra les bases essentielles pour devenir un développeur compétent.',
-          instructor: 'John Doe',
-          categories: ['Développement', 'Web'],
-          students: 1234,
-          price: 49.99,
-          chapters: [
-            Chapter(
-              id: 'chapter1',
-              title: 'Introduction aux technologies web',
-              description: 'Vue d\'ensemble des technologies web modernes',
-              learningTime: 60,
-              sections: [
-                Section(
-                  title: 'HTML5 Fondamentaux',
-                  description: 'Les bases de HTML5',
-                  videoUrl: 'assets/video/[@AnimesGratuit] The Eminence in Shadow S02EP04 VF.mp4',
-                  pdfUrl: 'https://www.tresfacile.net/doc/python/python-tres-facile-preview.pdf', // Chemin d'asset correctement formaté
-                ),
-                Section(
-                  title: 'CSS3 Essentiels',
-                  description: 'Introduction à CSS3',
-                  videoUrl: 'https://example.com/css3.mp4',
-                  pdfUrl: 'https://example.com/css3.pdf',
-                ),
-              ],
-            ),
-            Chapter(
-              id: 'chapter2',
-              title: 'JavaScript Moderne',
-              description: 'Les fondamentaux de JavaScript',
-              learningTime: 90,
-              sections: [
-                Section(
-                  title: 'Variables et Types',
-                  description: 'Comprendre les variables en JavaScript',
-                  videoUrl: 'https://example.com/js-basics.mp4',
-                  pdfUrl: 'https://example.com/js-basics.pdf',
-                ),
-              ],
-            ),
-          ],
+
+        showModalBottomSheet(context: context, builder: (BuildContext context){
+          return CoursDetail(cours: cours, controller: controller); 
+        },
+        useSafeArea: true,
+        isScrollControlled: true,
         );
         
-        Get.to(() => CourseDetailsView(course: course));
       },
       child: Container(
         width: 200,
@@ -95,7 +50,7 @@ class CourseCard extends StatelessWidget {
             ClipRRect(
               borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
               child: Image.network(
-                imageUrl,
+                cours.imageUrl??"",
                 height: 120,
                 width: double.infinity,
                 fit: BoxFit.cover,
@@ -131,7 +86,7 @@ class CourseCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    title,
+                    cours.titre,
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -149,7 +104,7 @@ class CourseCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        rating.toStringAsFixed(1),
+                        '2',
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.grey[600],
